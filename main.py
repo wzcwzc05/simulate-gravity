@@ -21,6 +21,15 @@ class plt(object):
         self.vel = vel              
         self.mass = mass
 
+def cal(a, b):
+    x=b.pos[0]-a.pos[0]
+    y=b.pos[1]-a.pos[1]
+    dis=math.sqrt(x ** 2 + y ** 2)
+    sin=x/dis
+    cos=y/dis
+    f=G*a.mass*b.mass/(dis ** 2)
+    return f*sin,f*cos
+    
 if __name__ == '__main__':
     pygame.init()
     size = WIDTH, HEIGHT
@@ -42,7 +51,27 @@ if __name__ == '__main__':
         for i in event:  
             if i.type == pygame.QUIT:  
                 sys.exit()
-    
+        for i in planet:
+            pos=i.pos
+            m=i.mass
+            xt=yt=0
+
+            for j in planet:
+                if (j.pos!=i.pos) and (j!=i):
+                    x,y=cal(i,j)
+                    xt+=x
+                    yt+=y
+            accel=i.a
+
+            accel[0]=xt/m
+            accel[1]=yt/m
+
+            i.vel[0]+=accel[0]   
+            i.vel[1]+=accel[1]  
+
+            pos[0]+=i.vel[0]
+            pos[1]+=i.vel[1]
+
         pygame.display.flip()
 
 pygame.quit()
