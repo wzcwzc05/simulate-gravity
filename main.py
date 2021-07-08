@@ -41,23 +41,18 @@ if __name__ == '__main__':
     clock = pygame.time.Clock() 
     planet = []
 
-    px = random.randint(10, WIDTH - 10)
-    py = random.randint(10, HEIGHT - 10)
-    m = random.randint(1, 25)
-    planet.append(plt("planet1.jpg",[px,py],[0.05,0.05],m,[0,0]))
-    screen.blit(planet[0].status, planet[0].pos)
-    pygame.display.flip()
-
-    px = random.randint(10, WIDTH - 10)
-    py = random.randint(10, HEIGHT - 10)
-    m = random.randint(1, 5)
-    planet.append(plt("planet2.jpg",[px,py],[0,0],m,[0,0]))
-    print(planet[1].status, planet[1].pos)
-    screen.blit(planet[1].status, planet[1].pos)
-    pygame.display.flip()
+    for i in range(6):
+        px = random.randint(10, WIDTH - 10)
+        py = random.randint(10, HEIGHT - 10)
+        vx = random.randint(-1, 1)/10
+        vy = random.randint(-1, 1)/10
+        m = random.randint(1, 25)
+        planet.append(plt("planet1.jpg",[px,py],[vx,vy],m,[0,0]))
+        screen.blit(planet[i].status, planet[i].pos)
+        pygame.display.flip()
  
     while (1==1):
-        clock.tick(240000)
+        clock.tick(60)
         event=pygame.event.get()
         for i in event:  
             if i.type == pygame.QUIT:  
