@@ -15,7 +15,7 @@ BLACK=0,0,0
 class plt(object):
 
     def __init__(self,st ,pos, vel, mass, acc):
-        self.status = pygame.transform.scale(pygame.image.load("./resources/" + st).convert(),(15,15)) 
+        self.status = pygame.transform.scale(pygame.image.load("./resources/" + st).convert(),(10,10)) 
         screen.blit(self.status, (pos[0],pos[1]))
         self.rect = pygame.image.load("./resources/" + st).get_rect() 
         self.pos = pos
@@ -44,14 +44,14 @@ if __name__ == '__main__':
     px = random.randint(10, WIDTH - 10)
     py = random.randint(10, HEIGHT - 10)
     m = random.randint(1, 25)
-    planet.append(plt("planet1.jpg",[px,py],[0,0],m,[0,0]))
+    planet.append(plt("planet1.jpg",[px,py],[0.05,0.05],m,[0,0]))
     screen.blit(planet[0].status, planet[0].pos)
     pygame.display.flip()
 
     px = random.randint(10, WIDTH - 10)
     py = random.randint(10, HEIGHT - 10)
     m = random.randint(1, 5)
-    planet.append(plt("planet2.jpg",[px,py],[0.05,0.05],m,[0,0]))
+    planet.append(plt("planet2.jpg",[px,py],[0,0],m,[0,0]))
     print(planet[1].status, planet[1].pos)
     screen.blit(planet[1].status, planet[1].pos)
     pygame.display.flip()
@@ -85,7 +85,13 @@ if __name__ == '__main__':
             i.pos=pos
             i.rect=i.rect.move(i.vel[0],i.vel[1])
             
-            screen.blit(i.status,i.pos)
-        pygame.display.flip()
+            screen.fill(BLACK)
+            for j in planet:
+                if (j.pos[0]>WIDTH) or (j.pos[0]<0) or (j.pos[1]>HEIGHT) or (j.pos[1]<0):
+                    planet.remove(j)
+            for j in planet:
+                print(j.pos)
+                screen.blit(j.status,j.pos)
+            pygame.display.flip()
 
 pygame.quit()
