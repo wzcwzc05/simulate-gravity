@@ -10,14 +10,16 @@ global TIME_STEP
 TIME_STEP=10
 WIDTH=640
 HEIGHT=640
-G = 6.67408e-11
-
+G = 6.67408e-1
+BLACK=0,0,0
 class plt(object):
 
-    def __init__(self, pos, vel, mass, acc):
-        self.pltstatus=pygame.image.load("./resources/planet1.jpg")  
+    def __init__(self,st ,pos, vel, mass, acc):
+        self.status = pygame.transform.scale(pygame.image.load("./resources/" + st).convert(),(15,15)) 
+        screen.blit(self.status, (pos[0],pos[1]))
+        self.rect = pygame.image.load("./resources/" + st).get_rect() 
         self.pos = pos
-        self.acc = acc   
+        self.acc = acc
         self.vel = vel              
         self.mass = mass
 
@@ -34,19 +36,28 @@ if __name__ == '__main__':
     pygame.init()
     size = WIDTH, HEIGHT
     screen = pygame.display.set_mode(size) 
+    pygame.display.set_caption("模拟宇宙")
 
     clock = pygame.time.Clock() 
     planet = []
 
-    #测试用随机生成两个星球
-    for i in range(1):
-        px = random.randint(10, WIDTH - 10)
-        py = random.randint(10, HEIGHT - 10)
-        m = random.randint(1, 25)
-        planet.append(plt([px,py],[0,0],[0,0],m))
+    px = random.randint(10, WIDTH - 10)
+    py = random.randint(10, HEIGHT - 10)
+    m = random.randint(1, 25)
+    planet.append(plt("planet1.jpg",[px,py],[0,0],m,[0,0]))
+    screen.blit(planet[0].status, planet[0].pos)
+    pygame.display.flip()
 
+    px = random.randint(10, WIDTH - 10)
+    py = random.randint(10, HEIGHT - 10)
+    m = random.randint(1, 5)
+    planet.append(plt("planet2.jpg",[px,py],[0.05,0.05],m,[0,0]))
+    print(planet[1].status, planet[1].pos)
+    screen.blit(planet[1].status, planet[1].pos)
+    pygame.display.flip()
+ 
     while (1==1):
-        clock.tick(60)
+        clock.tick(240000)
         event=pygame.event.get()
         for i in event:  
             if i.type == pygame.QUIT:  
@@ -61,7 +72,7 @@ if __name__ == '__main__':
                     x,y=cal(i,j)
                     xt+=x
                     yt+=y
-            accel=i.a
+            accel=i.acc
 
             accel[0]=xt/m
             accel[1]=yt/m
@@ -71,7 +82,10 @@ if __name__ == '__main__':
 
             pos[0]+=i.vel[0]
             pos[1]+=i.vel[1]
-
+            i.pos=pos
+            i.rect=i.rect.move(i.vel[0],i.vel[1])
+            
+            screen.blit(i.status,i.pos)
         pygame.display.flip()
 
 pygame.quit()
