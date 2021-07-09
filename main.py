@@ -12,6 +12,7 @@ WIDTH=640
 HEIGHT=640
 G = 6.67408e-1
 BLACK=0,0,0
+FPS=120
 class plt(object):
 
     def __init__(self,st ,pos, vel, mass, acc):
@@ -41,7 +42,7 @@ if __name__ == '__main__':
     clock = pygame.time.Clock() 
     planet = []
 
-    for i in range(6):
+    for i in range(100):
         px = random.randint(10, WIDTH - 10)
         py = random.randint(10, HEIGHT - 10)
         vx = random.randint(-1, 1)/10
@@ -52,12 +53,13 @@ if __name__ == '__main__':
         pygame.display.flip()
  
     while (1==1):
-        clock.tick(60)
+        clock.tick(FPS)
         event=pygame.event.get()
         for i in event:  
             if i.type == pygame.QUIT:  
                 sys.exit()
-        for i in planet:
+        planet1=planet
+        for i in planet1:
             pos=i.pos
             m=i.mass
             xt=yt=0
@@ -80,13 +82,15 @@ if __name__ == '__main__':
             i.pos=pos
             i.rect=i.rect.move(i.vel[0],i.vel[1])
             
-            screen.fill(BLACK)
-            for j in planet:
+            for j in planet1:
                 if (j.pos[0]>WIDTH) or (j.pos[0]<0) or (j.pos[1]>HEIGHT) or (j.pos[1]<0):
                     planet.remove(j)
-            for j in planet:
-                print(j.pos)
-                screen.blit(j.status,j.pos)
-            pygame.display.flip()
+
+        planet=planet1
+        screen.fill(BLACK)
+        for j in planet:
+  #         print(j.pos)
+            screen.blit(j.status,j.pos)
+        pygame.display.flip()
 
 pygame.quit()
