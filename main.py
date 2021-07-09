@@ -44,7 +44,9 @@ def Game_pause(TIME_STEP_):
         vy = random.randint(-1, 1)/10
         m = random.randint(1, 25)
         ret=g.multenterbox(msg,title,field,values=[px,py,vx,vy,"planet1.jpg",m])
-        planet.append(plt(ret[4],[int(ret[0]),int(ret[1])],[float(ret[2]),float(ret[3])],int(ret[5]),[0,0]))
+        if ret is None:
+            return 1,TIME_STEP_
+        planet.append(plt(ret[4],[float(ret[0]),float(ret[1])],[float(ret[2]),float(ret[3])],float(ret[5]),[0,0]))
         screen.blit(planet[len(planet)-1].status, planet[len(planet)-1].pos)
         pygame.display.flip()
         return 1,TIME_STEP_
@@ -52,11 +54,11 @@ def Game_pause(TIME_STEP_):
         title="模拟宇宙 修改游戏速度"
         msg="设置"
         field=["游戏速度"]
-        print(TIME_STEP_)
         ret=g.multenterbox(msg,title,field,values=[tmp])
+        if ret is None:
+            return 1,TIME_STEP_
         TIME_STEP_=float(ret[0])
         pygame.display.flip()
-        print(TIME_STEP_)
         return 1,TIME_STEP_
     elif (choice == "退出游戏"):
         return 0,TIME_STEP_
@@ -64,17 +66,65 @@ def Game_pause(TIME_STEP_):
         pygame.image.save(screen,"screenshot.jpg")
 
     return 1,TIME_STEP_
+
+def Game_reject(position):
+    mouse_x=position[0]
+    mouse_y=position[1]
+    flag=0
+    for i in planet:
+        x,y=i.pos[0],i.pos[1]
+        dis=math.sqrt((mouse_x-x) ** 2 + (mouse_y-y) ** 2)
+        if (dis<=10):
+            title="模拟宇宙 修改星球"
+            msg="修改星球"
+            field=["X轴位置","Y轴位置","X轴速度","Y轴速度","质量"]
+            px = i.pos[0]
+            py = i.pos[1]
+            vx = i.vel[0]
+            vy = i.vel[1]
+            m = i.mass
+            ret=g.multenterbox(msg,title,field,values=[px,py,vx,vy,m])
+            if ret is None:
+                flag=1
+                break
+            i.pos[0]=float(ret[0])
+            i.pos[1]=float(ret[1])
+            i.vel[0]=float(ret[2])
+            i.vel[1]=float(ret[3])
+            i.mass=float(ret[4])
+            screen.blit(i.status, i.pos)
+            pygame.display.flip()
+            flag=1
+            break
+    if (flag==0):
+        title="模拟宇宙 添加星球"
+        msg="在鼠标点击坐标添加星球"
+        field=["X轴位置","Y轴位置","X轴速度","Y轴速度","星球图片","质量"]
+        px = mouse_x
+        py = mouse_y
+        vx = 0
+        vy = 0
+        m = random.randint(1, 25)
+        ret=g.multenterbox(msg,title,field,values=[px,py,vx,vy,"planet1.jpg",m])
+        if ret is None:
+            return
+        planet.append(plt(ret[4],[float(ret[0]),float(ret[1])],[float(ret[2]),float(ret[3])],float(ret[5]),[0,0]))
+        screen.blit(planet[len(planet)-1].status, planet[len(planet)-1].pos)
+        pygame.display.flip()
+
 if __name__ == '__main__':
     title="模拟宇宙 欢迎"
     msg="设置"
     field=["X轴最大大小","Y轴最大大小","随机生成个数","FPS设置"]
     ret=g.multenterbox(msg,title,field,values=["640","640","5","60"])
+    if ret is None:
+        sys.exit()
     WIDTH=int(ret[0])
     HEIGHT=int(ret[1])
     NUM=int(ret[2])
     FPS=int(ret[3])
 
-    g.msgbox(msg="在游戏中按下鼠标左键暂停，可修改参数，添加星球",title="提醒",ok_button="我明白了")
+    g.msgbox(msg="在游戏中按下鼠标左键暂停，可修改参数，添加星球\n鼠标右键可在指定坐标操作",title="提醒",ok_button="我明白了")
     pygame.init()
     size = WIDTH, HEIGHT
     screen = pygame.display.set_mode(size) 
@@ -108,6 +158,8 @@ if __name__ == '__main__':
                         sys.exit()
                     else:
                         speed=ret[1]
+                if tmp ==  3:
+                    ret=Game_reject(pos)
     
         planet1=planet
         for i in planet1:
