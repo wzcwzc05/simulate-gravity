@@ -1,8 +1,9 @@
-from numpy.lib.shape_base import tile
 import pygame
 import os,sys,time,random,math
 import numpy
 import easygui as g
+import matplotlib
+from matplotlib import pyplot as plot
 
 WIDTH=640
 HEIGHT=640
@@ -21,6 +22,8 @@ class plt(object):
         self.acc = acc
         self.vel = vel              
         self.mass = mass
+        self.recordline = [[],[]]
+        self.recordspeed = [[1],[math.sqrt(self.vel[0] ** 2 + self.vel[1] ** 2)]]
 
 def cal(a, b):
     x=b.pos[0]-a.pos[0]
@@ -47,6 +50,7 @@ def Game_pause(TIME_STEP_):
         if ret is None:
             return 1,TIME_STEP_
         planet.append(plt(ret[4],[float(ret[0]),float(ret[1])],[float(ret[2]),float(ret[3])],float(ret[5]),[0,0]))
+        planet[len(planet)-1]=Update_Record(planet[len(planet)-1])
         screen.blit(planet[len(planet)-1].status, planet[len(planet)-1].pos)
         pygame.display.flip()
         return 1,TIME_STEP_
@@ -75,6 +79,23 @@ def Game_reject(position):
         x,y=i.pos[0],i.pos[1]
         dis=math.sqrt((mouse_x-x) ** 2 + (mouse_y-y) ** 2)
         if (dis<=10):
+            ret=g.buttonbox(msg="你点击了星球，请选择操作:",title="模拟宇宙",choices=("查看运动轨迹","查看速度图像","修改星球"))
+            if ret is None:
+                flag=1
+                break
+
+            if ret == "查看运动轨迹":
+                plot.plot(i.recordline[0],i.recordline[1])
+                plot.show()
+                flag=1
+                break
+
+            if ret == "查看速度图像":
+                plot.plot(i.recordspeed[0],i.recordspeed[1])
+                plot.show()
+                flag=1
+                break
+
             title="模拟宇宙 修改星球"
             msg="修改星球"
             field=["X轴位置","Y轴位置","X轴速度","Y轴速度","质量"]
@@ -84,14 +105,18 @@ def Game_reject(position):
             vy = i.vel[1]
             m = i.mass
             ret=g.multenterbox(msg,title,field,values=[px,py,vx,vy,m])
+
             if ret is None:
                 flag=1
                 break
+
             i.pos[0]=float(ret[0])
             i.pos[1]=float(ret[1])
             i.vel[0]=float(ret[2])
             i.vel[1]=float(ret[3])
             i.mass=float(ret[4])
+
+            i=Update_Record(i)
             screen.blit(i.status, i.pos)
             pygame.display.flip()
             flag=1
@@ -109,8 +134,16 @@ def Game_reject(position):
         if ret is None:
             return
         planet.append(plt(ret[4],[float(ret[0]),float(ret[1])],[float(ret[2]),float(ret[3])],float(ret[5]),[0,0]))
+        planet[len(planet)-1]=Update_Record(planet[len(planet)-1])
         screen.blit(planet[len(planet)-1].status, planet[len(planet)-1].pos)
         pygame.display.flip()
+
+def Update_Record(x):
+    x.recordline[0].append(x.pos[0])
+    x.recordline[1].append(x.pos[1])
+    x.recordspeed[1].append(float(math.sqrt(x.vel[0] ** 2 + x.vel[1] ** 2)))
+    x.recordspeed[0].append(int(x.recordspeed[0][len(x.recordspeed[0])-1]+1))
+    return x
 
 if __name__ == '__main__':
     title="模拟宇宙 欢迎"
@@ -140,6 +173,7 @@ if __name__ == '__main__':
         vy = random.randint(-1, 1)/10
         m = random.randint(1, 25)
         planet.append(plt("planet1.jpg",[px,py],[vx,vy],m,[0,0]))
+        planet[i-1]=Update_Record(planet[i-1])
         screen.blit(planet[i].status, planet[i].pos)
         pygame.display.flip()
  
@@ -193,6 +227,7 @@ if __name__ == '__main__':
         screen.fill(BLACK)
         for j in planet:
   #         print(j.pos)
+            j=Update_Record(j)
             screen.blit(j.status,j.pos)
         pygame.display.flip()
 
