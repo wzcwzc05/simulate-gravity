@@ -1,8 +1,6 @@
 import pygame
 import os,sys,time,random,math
-import numpy
 import easygui as g
-import matplotlib
 from matplotlib import pyplot as plot
 
 WIDTH=640
