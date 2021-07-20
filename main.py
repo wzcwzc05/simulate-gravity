@@ -33,7 +33,7 @@ def cal(a, b):
     return f*sin,f*cos
 
 def Game_pause(TIME_STEP_):
-    choice=g.buttonbox(msg="游戏已暂停",title="暂停",choices=("继续","保存截图","添加星球","修改游戏速度","退出游戏"))    
+    choice=g.buttonbox(msg="游戏已暂停",title="暂停",choices=("继续","保存截图","添加星球","修改游戏速度","实验性功能设置","退出游戏"))    
 
     if (choice == "添加星球"):
         title="模拟宇宙 添加星球"
@@ -47,6 +47,12 @@ def Game_pause(TIME_STEP_):
         ret=g.multenterbox(msg,title,field,values=[px,py,vx,vy,"planet1.jpg",m])
         if ret is None:
             return 1,TIME_STEP_
+        if (os.path.exists("./resources/" + ret[4])==False):
+            g.msgbox(msg="星球图片不存在！",title="Error",ok_button="OK")
+            return 1,TIME_STEP_
+        if (float(ret[5])<=0):
+            g.msgbox(msg="质量数值不合法！",title="Error",ok_button="OK")
+            return 1,TIME_STEP_
         planet.append(plt(ret[4],[float(ret[0]),float(ret[1])],[float(ret[2]),float(ret[3])],float(ret[5]),[0,0]))
         planet[len(planet)-1]=Update_Record(planet[len(planet)-1])
         screen.blit(planet[len(planet)-1].status, planet[len(planet)-1].pos)
@@ -59,9 +65,23 @@ def Game_pause(TIME_STEP_):
         ret=g.multenterbox(msg,title,field,values=[tmp])
         if ret is None:
             return 1,TIME_STEP_
+        if (float(ret[0]) <= 0):
+            g.msgbox(msg="数值不合法！",title="Error",ok_button="OK")
+            return 1,TIME_STEP_
         TIME_STEP_=float(ret[0])
         pygame.display.flip()
         return 1,TIME_STEP_
+    elif (choice == "实验性功能设置"):
+        title="实验性功能设置"
+        msg="设置"
+        field=["开启碰撞模式","碰撞后产生碎片个数"]
+        ret=g.multenterbox(msg,title,field,values=["False",0])
+        if ret is None:
+            return 1,TIME_STEP_
+        if (ret[0]=="True" or ret[0]=="true"):
+            HIT_=True
+        else:
+            HIT_=False
     elif (choice == "退出游戏"):
         return 0,TIME_STEP_
     elif (choice == "保存截图"):
@@ -107,7 +127,9 @@ def Game_reject(position):
             if ret is None:
                 flag=1
                 break
-
+            if (float(ret[4])<=0):
+               g.msgbox(msg="质量数值不合法！",title="Error",ok_button="OK")
+               break 
             i.pos[0]=float(ret[0])
             i.pos[1]=float(ret[1])
             i.vel[0]=float(ret[2])
@@ -130,6 +152,12 @@ def Game_reject(position):
         m = random.randint(1, 25)
         ret=g.multenterbox(msg,title,field,values=[px,py,vx,vy,"planet1.jpg",m])
         if ret is None:
+            return
+        if (os.path.exists("./resources/" + ret[4])==False):
+            g.msgbox(msg="星球图片不存在！",title="Error",ok_button="OK")
+            return
+        if (float(ret[5])<=0):
+            g.msgbox(msg="质量数值不合法！",title="Error",ok_button="OK")
             return
         planet.append(plt(ret[4],[float(ret[0]),float(ret[1])],[float(ret[2]),float(ret[3])],float(ret[5]),[0,0]))
         planet[len(planet)-1]=Update_Record(planet[len(planet)-1])
