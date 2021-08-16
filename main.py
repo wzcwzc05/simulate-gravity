@@ -5,7 +5,7 @@ from matplotlib import pyplot as plot
 
 WIDTH=640
 HEIGHT=640
-G = 6.67408e-1
+G = 6.67408e-1#在这里，为了保证演示效果，G扩大10的10次方倍
 BLACK=0,0,0
 FPS=120
 NUM=5
@@ -33,7 +33,7 @@ def cal(a, b):
     return f*sin,f*cos
 
 def Game_pause(TIME_STEP_):
-    choice=g.buttonbox(msg="游戏已暂停",title="暂停",choices=("继续","保存截图","添加星球","修改游戏速度","实验性功能设置","退出游戏"))    
+    choice=g.buttonbox(msg="游戏已暂停",title="暂停",choices=("继续","保存截图","添加星球","退出游戏"))    
 
     if (choice == "添加星球"):
         title="模拟宇宙 添加星球"
