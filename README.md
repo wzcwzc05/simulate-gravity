@@ -1,6 +1,10 @@
 # simulate-gravity
 - 开发进度：0.1.2
 
+前言：
+
+作者正在学习OpenGL，尝试用C++重构代码
+
 #### Releases：
 
 https://pan.baidu.com/s/1k67d8nkJDCrshX2coDtA9g 提取码:dln5
