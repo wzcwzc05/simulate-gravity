@@ -3,12 +3,14 @@ import os,sys,time,random,math
 import easygui as g
 from matplotlib import pyplot as plot
 
-WIDTH=640
-HEIGHT=640
-G = 6.67408e-1#在这里，为了保证演示效果，G扩大10的10次方倍
-BLACK=0,0,0
-FPS=120
-NUM=5
+global WIDTH=640
+global HEIGHT=640
+global multiple = 1e10
+global GO = 6.67408e-11
+global G = GO * multiple #在这里，为了保证演示效果，G扩大10的10次方倍
+global BLACK=0,0,0
+global FPS=120
+global NUM=5
 speed=float(1.0)
 class plt(object):
 
@@ -31,9 +33,13 @@ def cal(a, b):
     cos=y/dis
     f=G*a.mass*b.mass/(dis ** 2)
     return f*sin,f*cos
-
+def ClearRecordData():
+    for i in planet:
+        i.recordline = [[],[]]
+        i.recordspeed = [[],[]] 
+        
 def Game_pause(TIME_STEP_):
-    choice=g.buttonbox(msg="游戏已暂停",title="暂停",choices=("继续","保存截图","添加星球","退出游戏"))    
+    choice=g.buttonbox(msg="游戏已暂停",title="暂停",choices=("继续","基本设置","保存截图","添加星球","退出游戏"))    
 
     if (choice == "添加星球"):
         title="模拟宇宙 添加星球"
@@ -71,6 +77,7 @@ def Game_pause(TIME_STEP_):
         TIME_STEP_=float(ret[0])
         pygame.display.flip()
         return 1,TIME_STEP_
+    
     elif (choice == "实验性功能设置"):
         title="实验性功能设置"
         msg="设置"
@@ -82,8 +89,25 @@ def Game_pause(TIME_STEP_):
             HIT_=True
         else:
             HIT_=False
+    elif (choice == "基本设置"):
+        title = "模拟宇宙 基本设置"
+        msg = "设置"
+        field = ["FPS设置", "G值放大倍数", "清除记录数据"]
+        ret = g.multenterbox(msg, title, field, values=[FPS,multiple,"False"])
+        if ret is None:
+            return 1,TIME_STEP_
+        if (int(ret[0])<=0)and(ret[2]!="True" or ret[2]!="true" or ret[2]!="False" or ret[2]!="false"):
+            g.msgbox(msg="数值不合法！", title="Error", ok_button="OK")
+            return 0,TIME_STEP_
+        FPS = int(ret[0])
+        G = GO * float(ret[1])
+        multiple = ret[1]
+        if (ret[2]=="true") or (ret[2]=="True"):
+            ClearRecordData()
+        return 0, TIME_STEP_
     elif (choice == "退出游戏"):
         return 0,TIME_STEP_
+    
     elif (choice == "保存截图"):
         pygame.image.save(screen,"screenshot.jpg")
 
@@ -94,9 +118,9 @@ def Game_reject(position):
     mouse_y=position[1]
     flag=0
     for i in planet:
-        x,y=i.pos[0],i.pos[1]
+        x ,y=i.pos[0] ,i.pos[1]
         dis=math.sqrt((mouse_x-x) ** 2 + (mouse_y-y) ** 2)
-        if (dis<=10):
+        if (dis<=20):
             ret=g.buttonbox(msg="你点击了星球，请选择操作:",title="模拟宇宙",choices=("查看运动轨迹","查看速度图像","修改星球"))
             if ret is None:
                 flag=1
@@ -127,6 +151,7 @@ def Game_reject(position):
             if ret is None:
                 flag=1
                 break
+            
             if (float(ret[4])<=0):
                g.msgbox(msg="质量数值不合法！",title="Error",ok_button="OK")
                break 
@@ -141,6 +166,7 @@ def Game_reject(position):
             pygame.display.flip()
             flag=1
             break
+        
     if (flag==0):
         title="模拟宇宙 添加星球"
         msg="在鼠标点击坐标添加星球"
@@ -252,7 +278,6 @@ if __name__ == '__main__':
         planet=planet1
         screen.fill(BLACK)
         for j in planet:
-  #         print(j.pos)
             j=Update_Record(j)
             screen.blit(j.status,j.pos)
         pygame.display.flip()
