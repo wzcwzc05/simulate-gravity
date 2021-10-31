@@ -3,14 +3,23 @@ import os,sys,time,random,math
 import easygui as g
 from matplotlib import pyplot as plot
 
-global WIDTH=640
-global HEIGHT=640
-global multiple = 1e10
-global GO = 6.67408e-11
-global G = GO * multiple #在这里，为了保证演示效果，G扩大10的10次方倍
-global BLACK=0,0,0
-global FPS=120
-global NUM=5
+global WIDTH
+global HEIGHT
+global multiple
+global GO
+global G 
+global BLACK
+global FPS
+global NUM
+NUM = 5
+FPS = 120
+BLACK = 0, 0, 0
+WIDTH = 640
+HEIGHT = 640
+multiple = 1e10  # 在这里，为了保证演示效果，G扩大10的10次方倍
+GO = 6.67408e-11
+G = GO * multiple
+
 speed=float(1.0)
 class plt(object):
 
@@ -36,9 +45,9 @@ def cal(a, b):
 def ClearRecordData():
     for i in planet:
         i.recordline = [[],[]]
-        i.recordspeed = [[],[]] 
+        i.recordspeed = [[1], [math.sqrt(i.vel[0] ** 2 + i.vel[1] ** 2)]]
         
-def Game_pause(TIME_STEP_):
+def Game_pause(TIME_STEP_,FPS,multiple):
     choice=g.buttonbox(msg="游戏已暂停",title="暂停",choices=("继续","基本设置","保存截图","添加星球","退出游戏"))    
 
     if (choice == "添加星球"):
@@ -52,31 +61,31 @@ def Game_pause(TIME_STEP_):
         m = random.randint(1, 25)
         ret=g.multenterbox(msg,title,field,values=[px,py,vx,vy,"planet1.jpg",m])
         if ret is None:
-            return 1,TIME_STEP_
+            return 1, TIME_STEP_, FPS, multiple
         if (os.path.exists("./resources/" + ret[4])==False):
             g.msgbox(msg="星球图片不存在！",title="Error",ok_button="OK")
-            return 1,TIME_STEP_
+            return 1, TIME_STEP_, FPS, multiple
         if (float(ret[5])<=0):
             g.msgbox(msg="质量数值不合法！",title="Error",ok_button="OK")
-            return 1,TIME_STEP_
+            return 1, TIME_STEP_, FPS, multiple
         planet.append(plt(ret[4],[float(ret[0]),float(ret[1])],[float(ret[2]),float(ret[3])],float(ret[5]),[0,0]))
         planet[len(planet)-1]=Update_Record(planet[len(planet)-1])
         screen.blit(planet[len(planet)-1].status, planet[len(planet)-1].pos)
         pygame.display.flip()
-        return 1,TIME_STEP_
+        return 1, TIME_STEP_, FPS, multiple
     elif (choice == "修改游戏速度"):
         title="模拟宇宙 修改游戏速度"
         msg="设置"
         field=["游戏速度"]
         ret=g.multenterbox(msg,title,field,values=[tmp])
         if ret is None:
-            return 1,TIME_STEP_
+            return 1, TIME_STEP_, FPS, multiple
         if (float(ret[0]) <= 0):
             g.msgbox(msg="数值不合法！",title="Error",ok_button="OK")
-            return 1,TIME_STEP_
+            return 1, TIME_STEP_, FPS, multiple
         TIME_STEP_=float(ret[0])
         pygame.display.flip()
-        return 1,TIME_STEP_
+        return 1, TIME_STEP_, FPS, multiple
     
     elif (choice == "实验性功能设置"):
         title="实验性功能设置"
@@ -84,7 +93,7 @@ def Game_pause(TIME_STEP_):
         field=["开启碰撞模式","碰撞后产生碎片个数"]
         ret=g.multenterbox(msg,title,field,values=["False",0])
         if ret is None:
-            return 1,TIME_STEP_
+            return 1,TIME_STEP_,FPS,multiple
         if (ret[0]=="True" or ret[0]=="true"):
             HIT_=True
         else:
@@ -93,25 +102,25 @@ def Game_pause(TIME_STEP_):
         title = "模拟宇宙 基本设置"
         msg = "设置"
         field = ["FPS设置", "G值放大倍数", "清除记录数据"]
+        
         ret = g.multenterbox(msg, title, field, values=[FPS,multiple,"False"])
         if ret is None:
-            return 1,TIME_STEP_
+            return 1,TIME_STEP_,FPS,multiple
         if (int(ret[0])<=0)and(ret[2]!="True" or ret[2]!="true" or ret[2]!="False" or ret[2]!="false"):
             g.msgbox(msg="数值不合法！", title="Error", ok_button="OK")
-            return 0,TIME_STEP_
+            return 1, TIME_STEP_, FPS, multiple
         FPS = int(ret[0])
-        G = GO * float(ret[1])
-        multiple = ret[1]
+        multiple = float(ret[1])
         if (ret[2]=="true") or (ret[2]=="True"):
             ClearRecordData()
-        return 0, TIME_STEP_
+        return 1, TIME_STEP_,FPS,multiple
     elif (choice == "退出游戏"):
-        return 0,TIME_STEP_
+        return 0,TIME_STEP_,FPS,multiple
     
     elif (choice == "保存截图"):
         pygame.image.save(screen,"screenshot.jpg")
 
-    return 1,TIME_STEP_
+    return 1,TIME_STEP_,FPS,multiple
 
 def Game_reject(position):
     mouse_x=position[0]
@@ -239,11 +248,14 @@ if __name__ == '__main__':
                 pos=i.pos
                 tmp=i.button
                 if tmp == 1:
-                    ret=Game_pause(speed)
+                    ret=Game_pause(speed,FPS,multiple)
                     if (ret[0]==0):
                         sys.exit()
                     else:
                         speed=ret[1]
+                        FPS=ret[2]
+                        multiple=ret[3]
+                        G = GO * multiple
                 if tmp ==  3:
                     ret=Game_reject(pos)
     
