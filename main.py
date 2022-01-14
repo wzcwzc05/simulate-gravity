@@ -42,6 +42,7 @@ def cal(a, b):
     cos=y/dis
     f=G*a.mass*b.mass/(dis ** 2)
     return f*sin,f*cos
+
 def ClearRecordData():
     for i in planet:
         i.recordline = [[],[]]
@@ -66,7 +67,6 @@ if __name__ == '__main__':
     NUM=int(ret[2])
     FPS=int(ret[3])
 
-    g.msgbox(msg="在游戏中按下鼠标左键暂停，可修改参数，添加星球\n鼠标右键可在指定坐标操作",title="提醒",ok_button="我明白了")
     pygame.init()
     size = WIDTH, HEIGHT
     screen = pygame.display.set_mode(size) 
@@ -75,7 +75,7 @@ if __name__ == '__main__':
     clock = pygame.time.Clock() 
     planet = []
 
-    for i in range(NUM):
+    for i in range(NUM):    #随机生成NUM个星球
         px = random.randint(10, WIDTH - 10)
         py = random.randint(10, HEIGHT - 10)
         vx = random.randint(-1, 1)/10
@@ -86,26 +86,12 @@ if __name__ == '__main__':
         screen.blit(planet[i].status, planet[i].pos)
         pygame.display.flip()
  
-    while (1==1):
+    while (1==1):       #渲染循环
         clock.tick(FPS)
         event=pygame.event.get()
         for i in event:  
             if i.type == pygame.QUIT:  
                 sys.exit()
-            elif i.type == pygame.MOUSEBUTTONDOWN:
-                pos=i.pos
-                tmp=i.button
-                if tmp == 1:
-                    ret=Game_pause(speed,FPS,multiple)
-                    if (ret[0]==0):
-                        sys.exit()
-                    else:
-                        speed=ret[1]
-                        FPS=ret[2]
-                        multiple=ret[3]
-                        G = GO * multiple
-                if tmp ==  3:
-                    ret=Game_reject(pos)
     
         planet1=planet
         for i in planet1:
