@@ -3,11 +3,10 @@
 
 前言：
 
-作者正在学习OpenGL，尝试用C++重构代码
+重构代码ing...
 
 #### Releases：
 
-https://pan.baidu.com/s/1k67d8nkJDCrshX2coDtA9g 提取码:dln5
 
 说明:打包release版本因为打包python，文件量很大，运行程序是main.exe，推荐自主安装python和pygame easygui matplotlib第三方库，直接运行代码
 
