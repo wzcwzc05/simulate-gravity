@@ -12,6 +12,7 @@ WIDTH = int(ConfigFile.get("Display", "Width"))
 HEIGHT = int(ConfigFile.get("Display", "Height"))
 FPS = int(ConfigFile.get("Display", "FPS"))
 BackColor = int(ConfigFile.get("Display", "BackgroundColor"))
+Font = ConfigFile.get("ResoucesFile", "Font")
 planet = []
 
 
@@ -21,6 +22,7 @@ if __name__ == '__main__':
     size = WIDTH, HEIGHT
     screen = pygame.display.set_mode(size)
     pygame.display.set_caption("模拟宇宙")
+    FontType = pygame.freetype.Font(Font, 36)
     clock = pygame.time.Clock()
     a = plt("Earth", "planet1.jpg", [200, 200], [0, 0], 10, [0, 0])
     planet.append(a)
