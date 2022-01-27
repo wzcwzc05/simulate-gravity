@@ -16,6 +16,26 @@ Font = ConfigFile.get("ResoucesFile", "Font")
 planet = []
 
 
+def Start_Screen():
+    pass
+
+
+def UpdateData():
+    pass
+
+
+def SaveGame():
+    pass
+
+
+def UpdateRecord():
+    pass
+
+
+def GamePause():
+    pass
+
+
 if __name__ == '__main__':
     # 初始化
     pygame.init()
@@ -35,7 +55,11 @@ if __name__ == '__main__':
         for i in event:
             if i.type == pygame.QUIT:
                 sys.exit()
+            if i.type == pygame.K_ESCAPE:
+                GamePause()
 
         screen.fill(BackColor)
         screen.blit(planet[0].status, planet[0].pos)
         pygame.display.flip()
+
+pygame.quit()

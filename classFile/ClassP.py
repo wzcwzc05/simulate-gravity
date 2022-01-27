@@ -17,3 +17,4 @@ class plt(object):
         self.recordline = [[], []]
         self.recordspeed = [
             [1], [math.sqrt(self.vel[0] ** 2 + self.vel[1] ** 2)]]
+
