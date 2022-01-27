@@ -18,3 +18,11 @@ class plt(object):
         self.recordspeed = [
             [1], [math.sqrt(self.vel[0] ** 2 + self.vel[1] ** 2)]]
 
+    def cal(a, b, G):
+        x = b.pos[0]-a.pos[0]
+        y = b.pos[1]-a.pos[1]
+        dis = math.sqrt(x ** 2 + y ** 2)
+        sin = x/dis
+        cos = y/dis
+        f = G*a.mass*b.mass/(dis ** 2)
+        return f*sin, f*cos
