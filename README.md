@@ -1,17 +1,13 @@
 # simulate-gravity
 - 开发进度：0.1.2
 
-前言：
-
-作者正在学习OpenGL，尝试用C++重构代码
-
 #### Releases：
 
 https://pan.baidu.com/s/1k67d8nkJDCrshX2coDtA9g 提取码:dln5
 
 说明:打包release版本因为打包python，文件量很大，运行程序是main.exe，推荐自主安装python和pygame easygui matplotlib第三方库，直接运行代码
 
-
+安装依赖库: pip install pygame easygui matplotlib或pip install -r requirements.txt
 
 这是一个基于Python的2D平面内的宇宙模拟工具
 
