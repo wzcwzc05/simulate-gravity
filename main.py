@@ -11,6 +11,7 @@ global G
 global BLACK
 global FPS
 global NUM
+
 NUM = 5
 FPS = 120
 BLACK = 0, 0, 0
@@ -162,7 +163,7 @@ def Game_reject(position):
                 break
             
             if (float(ret[4])<=0):
-               g.msgbox(msg="质量数值不合法！",title="Error",ok_button="OK")
+               g.msgbox(msg="质量数值不合法!",title="Error",ok_button="OK")
                break 
             i.pos[0]=float(ret[0])
             i.pos[1]=float(ret[1])
