@@ -32,19 +32,19 @@ class plt(object):
 
     def __init__(self, st, pos, vel, mass, acc):
         self.status = pygame.transform.scale(
-            pygame.image.load("./resources/" + st).convert(), (10, 10))
-        screen.blit(self.status, (pos[0], pos[1]))
-        self.rect = pygame.image.load("./resources/" + st).get_rect()
-        self.pos = pos
-        self.acc = acc
-        self.vel = vel
-        self.mass = mass
-        self.recordline = [[], []]
+            pygame.image.load("./resources/" + st).convert(), (10, 10)) #加载图片
+        screen.blit(self.status, (pos[0], pos[1]))                      #初始化在屏幕上
+        self.rect = pygame.image.load("./resources/" + st).get_rect()   #图片矩形框（边界）
+        self.pos = pos                                                  #位置
+        self.acc = acc                                                  #加速度
+        self.vel = vel                                                  #速度
+        self.mass = mass                                                #质量
+        self.recordline = [[], []]                                      #记录轨迹（二元组）
         self.recordspeed = [
-            [1], [math.sqrt(self.vel[0] ** 2 + self.vel[1] ** 2)]]
+            [1], [math.sqrt(self.vel[0] ** 2 + self.vel[1] ** 2)]]      #通过瞬时速度记录速度变化（二元组）
 
 
-def cal(a, b):
+def cal(a, b):                                                          #计算plt a与plt b之间的万有引力作用力，返回到坐标轴方向
     x = b.pos[0]-a.pos[0]
     y = b.pos[1]-a.pos[1]
     dis = math.sqrt(x ** 2 + y ** 2)
@@ -54,13 +54,13 @@ def cal(a, b):
     return f*sin, f*cos
 
 
-def ClearRecordData():
+def ClearRecordData():                                                  #清除记录
     for i in planet:
         i.recordline = [[], []]
         i.recordspeed = [[1], [math.sqrt(i.vel[0] ** 2 + i.vel[1] ** 2)]]
 
 
-def Game_pause(TIME_STEP_, FPS, multiple):
+def Game_pause(TIME_STEP_, FPS, multiple):                              #游戏暂停
     choice = g.buttonbox(msg="游戏已暂停", title="暂停", choices=(
         "继续", "基本设置", "保存截图", "添加星球", "退出游戏"))
 
@@ -89,6 +89,7 @@ def Game_pause(TIME_STEP_, FPS, multiple):
         screen.blit(planet[len(planet)-1].status, planet[len(planet)-1].pos)
         pygame.display.flip()
         return 1, TIME_STEP_, FPS, multiple
+    
     elif (choice == "修改游戏速度"):
         title = "模拟宇宙 修改游戏速度"
         msg = "设置"
@@ -114,6 +115,7 @@ def Game_pause(TIME_STEP_, FPS, multiple):
             HIT_ = True
         else:
             HIT_ = False
+    
     elif (choice == "基本设置"):
         title = "模拟宇宙 基本设置"
         msg = "设置"
@@ -131,6 +133,7 @@ def Game_pause(TIME_STEP_, FPS, multiple):
         if (ret[2] == "true") or (ret[2] == "True"):
             ClearRecordData()
         return 1, TIME_STEP_, FPS, multiple
+    
     elif (choice == "退出游戏"):
         return 0, TIME_STEP_, FPS, multiple
 
