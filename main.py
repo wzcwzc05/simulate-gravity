@@ -67,7 +67,7 @@ def Game_pause(TIME_STEP_, FPS, multiple):                              #游戏�
     if (choice == "添加星球"):
         title = "模拟宇宙 添加星球"
         msg = "设置"
-        field = ["X轴位置", "Y轴位置", "X轴速度", "Y轴速度", "星球图片", "质量"]
+        field = ["X轴位置", "Y轴位置", "X轴速度", "Y轴速度", "星球图片", "质量"]    #随机生成数据
         px = random.randint(10, WIDTH - 10)
         py = random.randint(10, HEIGHT - 10)
         vx = random.randint(-1, 1)/10
@@ -77,20 +77,20 @@ def Game_pause(TIME_STEP_, FPS, multiple):                              #游戏�
                              px, py, vx, vy, "planet1.jpg", m])
         if ret is None:
             return 1, TIME_STEP_, FPS, multiple
-        if (os.path.exists("./resources/" + ret[4]) == False):
+        if (os.path.exists("./resources/" + ret[4]) == False):              #判定图片是否存在
             g.msgbox(msg="星球图片不存在！", title="Error", ok_button="OK")
             return 1, TIME_STEP_, FPS, multiple
-        if (float(ret[5]) <= 0):
+        if (float(ret[5]) <= 0):                                            #判定数据合法性
             g.msgbox(msg="质量数值不合法！", title="Error", ok_button="OK")
             return 1, TIME_STEP_, FPS, multiple
         planet.append(plt(ret[4], [float(ret[0]), float(ret[1])], [
-                      float(ret[2]), float(ret[3])], float(ret[5]), [0, 0]))
+                      float(ret[2]), float(ret[3])], float(ret[5]), [0, 0]))    #加入planet
         planet[len(planet)-1] = Update_Record(planet[len(planet)-1])
         screen.blit(planet[len(planet)-1].status, planet[len(planet)-1].pos)
         pygame.display.flip()
         return 1, TIME_STEP_, FPS, multiple
     
-    elif (choice == "修改游戏速度"):
+    elif (choice == "修改游戏速度"):                            #修改速度
         title = "模拟宇宙 修改游戏速度"
         msg = "设置"
         field = ["游戏速度"]
@@ -104,7 +104,7 @@ def Game_pause(TIME_STEP_, FPS, multiple):                              #游戏�
         pygame.display.flip()
         return 1, TIME_STEP_, FPS, multiple
 
-    elif (choice == "实验性功能设置"):
+    elif (choice == "实验性功能设置"):                  #碰撞
         title = "实验性功能设置"
         msg = "设置"
         field = ["开启碰撞模式", "碰撞后产生碎片个数"]
@@ -116,7 +116,7 @@ def Game_pause(TIME_STEP_, FPS, multiple):                              #游戏�
         else:
             HIT_ = False
     
-    elif (choice == "基本设置"):
+    elif (choice == "基本设置"):                #基本设置
         title = "模拟宇宙 基本设置"
         msg = "设置"
         field = ["FPS设置", "G值放大倍数", "清除记录数据"]
@@ -137,7 +137,7 @@ def Game_pause(TIME_STEP_, FPS, multiple):                              #游戏�
     elif (choice == "退出游戏"):
         return 0, TIME_STEP_, FPS, multiple
 
-    elif (choice == "保存截图"):
+    elif (choice == "保存截图"):                            #将画面截图
         pygame.image.save(screen, "screenshot.jpg")
 
     return 1, TIME_STEP_, FPS, multiple
@@ -157,13 +157,13 @@ def Game_reject(position):
                 flag = 1
                 break
 
-            if ret == "查看运动轨迹":
+            if ret == "查看运动轨迹":                   #使用matplotlib绘制运动轨迹
                 plot.plot(i.recordline[0], i.recordline[1])
                 plot.show()
                 flag = 1
                 break
 
-            if ret == "查看速度图像":
+            if ret == "查看速度图像":                   #使用matplotlib绘制速度图像
                 plot.plot(i.recordspeed[0], i.recordspeed[1])
                 plot.show()
                 flag = 1
