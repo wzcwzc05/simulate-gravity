@@ -169,7 +169,7 @@ def Game_reject(position):
                 flag = 1
                 break
 
-            title = "模拟宇宙 修改星球"
+            title = "模拟宇宙 修改星球"             #修改星球数据
             msg = "修改星球"
             field = ["X轴位置", "Y轴位置", "X轴速度", "Y轴速度", "质量"]
             px = i.pos[0]
@@ -183,7 +183,7 @@ def Game_reject(position):
                 flag = 1
                 break
 
-            if (float(ret[4]) <= 0):
+            if (float(ret[4]) <= 0):        #数据合法性检查
                 g.msgbox(msg="质量数值不合法!", title="Error", ok_button="OK")
                 break
             i.pos[0] = float(ret[0])
@@ -202,7 +202,7 @@ def Game_reject(position):
         title = "模拟宇宙 添加星球"
         msg = "在鼠标点击坐标添加星球"
         field = ["X轴位置", "Y轴位置", "X轴速度", "Y轴速度", "星球图片", "质量"]
-        px = mouse_x
+        px = mouse_x                        #在鼠标点击坐标上创建星球
         py = mouse_y
         vx = 0
         vy = 0
@@ -224,7 +224,7 @@ def Game_reject(position):
         pygame.display.flip()
 
 
-def Update_Record(x):
+def Update_Record(x):                           #更新数据记录
     x.recordline[0].append(x.pos[0])
     x.recordline[1].append(x.pos[1])
     x.recordspeed[1].append(float(math.sqrt(x.vel[0] ** 2 + x.vel[1] ** 2)))
